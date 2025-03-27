@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Center {
+  id          Int  @default(autoincrement()) @id
+  name        String
+  email       String
+  password    String
+  document    String
+  region      String
+  location    String
+  image       String
+  teachers   Teacher[]
+}
+
+model Teacher {
+  id         Int  @default(autoincrement()) @id
+  firstname  String
+  lastname   String
+  phone      String
+  password   String
+  diplom     String?
+  image      String?
+  center     Center @relation(fields: [centerId], references: [id])
+  centerId   Int
+  TeacherGroup      Group[]   @relation("Teacher")
+  assistTeacherGroup  Group[] @relation("assistTeacher")
+}
+
+model Group {
+  id        Int  @default(autoincrement())  @id
+  name      String
+  startTime DateTime @default(now())
+  endTime   DateTime?
+  teacher  Teacher @relation("Teacher",fields: [teacherId], references: [id])
+  teacherId Int
+  assistTeacher Teacher @relation("assistTeacher",fields: [assistTeacherId], references: [id])
+  assistTeacherId Int
+  students  Student[]
+}
+
+model Student {
+  id         Int @default(autoincrement())  @id
+  firstname  String
+  lastname   String
+  phone      String
+  password   String
+  groupId    Int
+  group      Group @relation(fields: [groupId], references: [id])
+  result     Result[]
+}
+
+model Reading {
+  id         Int @default(autoincrement())  @id
+  question   String
+  options    String[] @default([])
+  answer     String
+  desc       String?
+  examId     Int
+  exam       Exam @relation(fields: [examId], references: [id])
+}
+
+model Lestinig {
+  id         Int @default(autoincrement())  @id
+  question   String
+  options    String[] @default([])
+  answer     String
+  desc       String?
+  examId     Int
+  exam       Exam @relation(fields: [examId], references: [id])
+}
+
+model Writing {
+  id         Int @default(autoincrement())  @id
+  question   String
+  options    String[] @default([])
+  answer     String?
+  desc       String?
+  examId     Int
+  exam       Exam @relation(fields: [examId], references: [id])
+}
+
+model Speaking {
+  id         Int @default(autoincrement())  @id
+  question   String
+  options    String[] @default([])
+  answer     String?
+  desc       String?
+  examId     Int
+  exam       Exam @relation(fields: [examId], references: [id])
+}
+
+model Exam {
+  id        Int @default(autoincrement())  @id
+  reading   Reading[]
+  lestinig  Lestinig[]
+  writing   Writing[]
+  speaking  Speaking[]
+  result    Result[]
+}
+
+model Result {
+  id             Int @default(autoincrement())  @id
+  readingScore   Float
+  lestinigScore  Float
+  writingScore   Float
+  speakingScore  Float
+  examId         Int
+  exam           Exam @relation(fields: [examId], references: [id])
+  studentId      Int
+  student        Student @relation(fields: [studentId], references: [id])
+  overalScore    Float
+}
