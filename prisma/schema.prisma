@@ -18,10 +18,10 @@ model Center {
   name        String
   email       String
   password    String
-  document    String
+  document    String?
   region      String
   location    String
-  image       String
+  image       String?
   teachers   Teacher[]
 }
 
@@ -109,6 +109,7 @@ model Exam {
   writing   Writing[]
   speaking  Speaking[]
   result    Result[]
+  date      DateTime @default(now())
 }
 
 model Result {
