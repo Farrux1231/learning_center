@@ -1,26 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ExamService {
-  create(createExamDto: CreateExamDto) {
-    return 'This action adds a new exam';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createExamDto: CreateExamDto) {
+    return this.prisma.exam.create({
+      data: createExamDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all exam`;
+  async findAll() {
+    return this.prisma.exam.findMany({
+      include: {
+        reading: true,
+        lestinig: true,
+        writing: true,
+        speaking: true,
+        result: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exam`;
+  async findOne(id: number) {
+    return this.prisma.exam.findUnique({
+      where: { id },
+      include: {
+        reading: true,
+        lestinig: true,
+        writing: true,
+        speaking: true,
+        result: true,
+      },
+    });
   }
 
-  update(id: number, updateExamDto: UpdateExamDto) {
-    return `This action updates a #${id} exam`;
+  async update(id: number, updateExamDto: UpdateExamDto) {
+    return this.prisma.exam.update({
+      where: { id },
+      data: updateExamDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exam`;
+  async remove(id: number) {
+    return this.prisma.exam.delete({
+      where: { id },
+    });
   }
 }

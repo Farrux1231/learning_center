@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReadingDto } from './dto/create-reading.dto';
 import { UpdateReadingDto } from './dto/update-reading.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ReadingService {
-  create(createReadingDto: CreateReadingDto) {
-    return 'This action adds a new reading';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createReadingDto: CreateReadingDto) {
+    return this.prisma.reading.create({
+      data: createReadingDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all reading`;
+  async findAll() {
+    return this.prisma.reading.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} reading`;
+  async findOne(id: number) {
+    return this.prisma.reading.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateReadingDto: UpdateReadingDto) {
-    return `This action updates a #${id} reading`;
+  async update(id: number, updateReadingDto: UpdateReadingDto) {
+    return this.prisma.reading.update({
+      where: { id },
+      data: updateReadingDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} reading`;
+  async remove(id: number) {
+    return this.prisma.reading.delete({
+      where: { id },
+    });
   }
 }

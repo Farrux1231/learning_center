@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLestiningDto } from './dto/create-lestining.dto';
 import { UpdateLestiningDto } from './dto/update-lestining.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class LestiningService {
-  create(createLestiningDto: CreateLestiningDto) {
-    return 'This action adds a new lestining';
+export class ListeningService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createListeningDto: CreateLestiningDto) {
+    return this.prisma.lestinig.create({
+      data: createListeningDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all lestining`;
+  async findAll() {
+    return this.prisma.lestinig.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lestining`;
+  async findOne(id: number) {
+    return this.prisma.lestinig.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateLestiningDto: UpdateLestiningDto) {
-    return `This action updates a #${id} lestining`;
+  async update(id: number, updateListeningDto: UpdateLestiningDto) {
+    return this.prisma.lestinig.update({
+      where: { id },
+      data: updateListeningDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lestining`;
+  async remove(id: number) {
+    return this.prisma.lestinig.delete({
+      where: { id },
+    });
   }
 }

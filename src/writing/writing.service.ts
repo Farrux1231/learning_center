@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWritingDto } from './dto/create-writing.dto';
 import { UpdateWritingDto } from './dto/update-writing.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class WritingService {
-  create(createWritingDto: CreateWritingDto) {
-    return 'This action adds a new writing';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createWritingDto: CreateWritingDto) {
+    return await this.prisma.writing.create({
+      data: createWritingDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all writing`;
+  async findAll() {
+    return await this.prisma.writing.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} writing`;
+  async findOne(id: number) {
+    return await this.prisma.writing.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateWritingDto: UpdateWritingDto) {
-    return `This action updates a #${id} writing`;
+  async update(id: number, updateWritingDto: UpdateWritingDto) {
+    return await this.prisma.writing.update({
+      where: { id },
+      data: updateWritingDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} writing`;
+  async remove(id: number) {
+    return await this.prisma.writing.delete({
+      where: { id },
+    });
   }
 }
+

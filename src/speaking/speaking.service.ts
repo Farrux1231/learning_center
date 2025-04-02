@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSpeakingDto } from './dto/create-speaking.dto';
 import { UpdateSpeakingDto } from './dto/update-speaking.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SpeakingService {
-  create(createSpeakingDto: CreateSpeakingDto) {
-    return 'This action adds a new speaking';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createSpeakingDto: CreateSpeakingDto) {
+    return await this.prisma.speaking.create({
+      data: createSpeakingDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all speaking`;
+  async findAll() {
+    return await this.prisma.speaking.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} speaking`;
+  async findOne(id: number) {
+    return await this.prisma.speaking.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateSpeakingDto: UpdateSpeakingDto) {
-    return `This action updates a #${id} speaking`;
+  async update(id: number, updateSpeakingDto: UpdateSpeakingDto) {
+    return await this.prisma.speaking.update({
+      where: { id },
+      data: updateSpeakingDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} speaking`;
+  async remove(id: number) {
+    return await this.prisma.speaking.delete({
+      where: { id },
+    });
   }
 }
+
