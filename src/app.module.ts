@@ -12,9 +12,10 @@ import { SpeakingModule } from './speaking/speaking.module';
 import { ExamModule } from './exam/exam.module';
 import { ResultModule } from './result/result.module';
 import { GroupModule } from './group/group.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
-  imports: [PrismaModule, CenterModule, TeacherModule, StudentModule, ReadingModule, LestiningModule, WritingModule, SpeakingModule, ExamModule, ResultModule, GroupModule],
+  imports: [PrismaModule, CenterModule, TeacherModule, StudentModule, ReadingModule, LestiningModule, WritingModule, SpeakingModule, ExamModule, ResultModule, GroupModule, AnswerModule],
   controllers: [AppController],
   providers: [AppService],
 })

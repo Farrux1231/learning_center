@@ -112,6 +112,17 @@ model Exam {
   date      DateTime @default(now())
 }
 
+model Answer {
+  id        Int @default(autoincrement())  @id
+  studentId  Int
+  readingQuestionId   Int?
+  readingAnswer       String?
+  listeningQuetionId  Int?
+  listeningAnswer     String?
+  writingQuetionId    Int?
+  writingAnswer       String?
+}
+
 model Result {
   id             Int @default(autoincrement())  @id
   readingScore   Float

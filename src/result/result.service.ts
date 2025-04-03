@@ -7,20 +7,49 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ResultService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createResultDto: CreateResultDto) {
-    return this.prisma.result.create({
-      data: createResultDto,
-    });
-  }
-
   async findAll() {
-    return this.prisma.result.findMany({
+    const results = await this.prisma.result.findMany({
       include: {
-        exam: true,
+        exam: {
+          include: {
+            reading: true, 
+          },
+        },
         student: true,
       },
     });
+  
+    const answers = await this.prisma.answer.findMany();
+  
+    return results.map((result) => {
+      let correct = 0;
+      let incorrect = 0;
+  
+      answers.forEach((ans) => {
+        if (result.studentId === ans.studentId) { 
+          const readingQuestion = result.exam.reading.find(
+            (q) => q.id === ans.readingQuestionId
+          );
+  
+          if (readingQuestion) {
+            if (readingQuestion.answer === ans.readingAnswer) {
+              correct++;
+            } else {
+              incorrect++;
+            }
+          }
+        }
+      });
+  
+      return {
+        ...result,
+        correct,
+        incorrect,
+      };
+    });
   }
+  
+  
 
   async findOne(id: number) {
     return this.prisma.result.findUnique({
